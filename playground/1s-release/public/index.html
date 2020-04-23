@@ -4,19 +4,75 @@
         <title>Meu Primeiro Jogo Multiplayer</title>
 
         <style>
+            html {
+                font-family: sans-serif;
+            }
+            body {
+                display: flex;
+                background-color: #151515;
+                align-items: center;
+                justify-content: center;
+            }
+
+            #game {
+                display: flex;
+            }
+
             #screen {
-                border: 10px solid #CCC;
+                /* border: 10px solid #CCC; */
                 image-rendering: pixelated;
                 image-rendering: crisp-edges;
                 image-rendering: -moz-crisp-edges;
                 width: 400px;
                 height: 400px;
+                background-color: black;
+            }
+            #score-table {
+                background-color: white;
+            }
+
+            #score-table h2 {
+                text-align: center;
+                font-size: 24px;
+            }
+
+            #score-table table {
+                /* position: absolute; */
+                /* border: 1px solid black; */
+                border-spacing: 0;
+                border: 1px solid black;
+                border-collapse: collapse;
+            }
+            #score-table table th {
+                padding: 10px;
+                border: 1px solid black;
+            }
+            #score-table table td {
+                /* margin: 0; */
+                padding: 10px;
+                border: 1px solid black;
+            }
+            /* #score-table table td.player-id-current {
+                color: yellow;
+            }
+            #score-table table td.player-score-current {
+                color: yellow;
+            } */
+
+            #score-table table #current-player-row {
+                background-color: #ccc;
+            }
+            #score-table table td.player-score {
+                text-align: center;
             }
         </style>
         <script src="/socket.io/socket.io.js"></script>
     </head>
     <body>
-        <canvas id="screen" width="10" height="10"></canvas>
+        <div id="game">
+            <canvas id="screen" width="25" height="25"></canvas>
+            <div id="score-table"></div>
+        </div>
 
         <script type="module">
             import createGame from './game.js'
@@ -34,7 +90,8 @@
                 console.log(`Player connected on Client with id: ${playerId}`)
 
                 const screen = document.getElementById('screen')
-                renderScreen(screen, game, requestAnimationFrame, playerId)
+                const scoreTable = document.getElementById('score-table')
+                renderScreen(screen, scoreTable, game, requestAnimationFrame, playerId)
             })
 
             socket.on('setup', (state) => {

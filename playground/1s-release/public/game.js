@@ -3,8 +3,8 @@ export default function createGame() {
         players: {},
         fruits: {},
         screen: {
-            width: 10,
-            height: 10
+            width: 25,
+            height: 25
         }
     }
 
@@ -34,17 +34,20 @@ export default function createGame() {
         const playerId = command.playerId
         const playerX = 'playerX' in command ? command.playerX : Math.floor(Math.random() * state.screen.width)
         const playerY = 'playerY' in command ? command.playerY : Math.floor(Math.random() * state.screen.height)
+        const score = 0
 
         state.players[playerId] = {
             x: playerX,
-            y: playerY
+            y: playerY,
+            score: score
         }
 
         notifyAll({
             type: 'add-player',
             playerId: playerId,
             playerX: playerX,
-            playerY: playerY
+            playerY: playerY,
+            score: score
         })
     }
 
@@ -136,8 +139,22 @@ export default function createGame() {
             if (player.x === fruit.x && player.y === fruit.y) {
                 console.log(`COLLISION between ${playerId} and ${fruitId}`)
                 removeFruit({ fruitId: fruitId })
+                addPoint({playerId : playerId})
             }
         }
+    }
+
+    function addPoint(command) {
+        const player = state.players[command.playerId]
+
+        player.score += 1
+        
+        console.log(player.score)
+
+        notifyAll({
+            type: 'player-score',
+            player
+        })
     }
 
     return {
